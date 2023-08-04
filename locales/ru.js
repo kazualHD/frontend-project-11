@@ -4,14 +4,18 @@ export default {
     example: 'Пример: https://ru.hexlet.io/lessons.rss',
     slogan: 'Начните читать RSS сегодня! Это легко, это красиво.',
     rssForm: {
-      rssLabel: 'Ссылка Rss',
+      rssLabel: 'Ссылка RSS',
       rssSubmit: 'Добавить',
     },
-    errors: {
-      invalidUrl: 'Некоректный формат URL',
-      invalidType: 'Значение поля должно быть строкой',
-      emptyInput: 'Поле ввода не должно быть пустым',
-      dublicate: 'Данное значение уже существует',
+    feedback: {
+      success: 'RSS успешно загружен',
+      errors: {
+        empty_field: 'Не должно быть пустым',
+        invalid_url: 'Ссылка должна быть валидным URL',
+        duplicate: 'RSS уже существует',
+        network: 'Ошибка сети',
+        parser: 'Ресурс не содержит валидный RSS',
+      },
     },
   },
 };

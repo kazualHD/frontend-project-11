@@ -1,19 +1,21 @@
 import * as yup from 'yup';
 import i18next from 'i18next';
-import renderElementsText from './view.js';
-import langs from '../locales/index.js';
+import watch, { renderElementsText } from './view.js';
+import resources from '../locales/index.js';
 
 export default () => {
   const defaultLang = 'ru';
   const state = {
-    proccesState: '',
+    proccesState: 'initialized',
     lng: defaultLang,
     rssForm: {
       link: null,
-      proccesState: '',
+      proccesState: 'filling',
+    },
+    uiState: {
+      feedback: null,
     },
     validLinks: [],
-    uiState: {},
   };
 
   const i18nextNewInstance = i18next.createInstance();
@@ -21,10 +23,10 @@ export default () => {
   i18nextNewInstance.init({
     lng: defaultLang,
     debug: true,
-    langs,
+    resources,
   });
 
-  const getSchema = (inputUrl) => yup.string().required().url().notOneOf(inputUrl);
+  const getSchema = (inputUrl) => yup.string().required().url().notOneOf([inputUrl]);
   yup.setLocale({
     mixed: {
       notOneOf: 'errors.dublicate',
@@ -50,22 +52,40 @@ export default () => {
 
   renderElementsText(elements, i18nextNewInstance); // rendering text for elements with i18next
 
-  const { form, input, feedback } = elements;
+  const {
+    form,
+    input,
+  } = elements;
 
-  input.addEventListener('change', (e) => {
-    const { target } = e;
-    state.rssForm.link = target.value;
+  const watcher = watch(elements, state);
+
+  input.addEventListener('change', (event) => {
+    const { target } = event;
+    watcher.rssForm.link = target.value;
   });
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    state.rssForm.proccesState = 'validating';
-    getSchema(state.rssForm.link)
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    watcher.rssForm.proccesState = 'validating';
+    const schema = getSchema(watcher.validLinks);
+    schema.validate(watcher.rssForm.link)
       .then(() => {
-        state.validLinks.push(state.rssForm.link);
+        watcher.rssForm.proccesState = 'validated';
+        watcher.validLinks.push(watcher.rssForm.link);
       })
-      .catch((err) => {
-        feedback.textContent = i18nextNewInstance.t(err.message);
+      .catch((error) => {
+        switch (error.name) {
+          case 'ValidationError': {
+            const [customError] = error.errors;
+            watcher.rssForm.proccesState = 'invalidated';
+            watcher.uiState.feedback = customError; // PROBLEM !!!
+
+            break;
+          }
+          default: {
+            throw new Error(`Unexpected error ${error.name}`);
+          }
+        }
       });
   });
 };
