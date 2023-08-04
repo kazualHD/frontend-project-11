@@ -29,11 +29,11 @@ export default () => {
   const getSchema = (inputUrl) => yup.string().required().url().notOneOf([inputUrl]);
   yup.setLocale({
     mixed: {
-      notOneOf: 'errors.dublicate',
+      notOneOf: 'feedback.errors.dublicate',
     },
     string: {
-      url: 'errors.invalidUrl',
-      required: 'errors.emptyInput',
+      url: 'feedback.errors.invalidUrl',
+      required: 'feedback.errors.emptyInput',
     },
   });
 
