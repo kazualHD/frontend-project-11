@@ -17,5 +17,12 @@ export default {
         parser: 'Ресурс не содержит валидный RSS',
       },
     },
+    feeds: 'Фиды',
+    posts: 'Посты',
+    modal_position: {
+      view: 'Просмотр',
+      article: 'Читать полностью',
+      close: 'Закрыть',
+    },
   },
 };
