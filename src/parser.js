@@ -1,27 +1,29 @@
-const takePosts = (domTree) => {
-  const items = domTree.querySelectorAll('channel > item');
+const takePosts = (dom) => {
+  const items = dom.querySelectorAll('channel > item');
   if (!items) {
     return null;
   }
-  return Array.from(items)
-    .map((item) => {
-      const titleElem = item.querySelector('title');
-      const guidElem = item.querySelector('guid');
-      const linkElem = item.querySelector('link');
-      const descriptionElem = item.querySelector('description');
+  const posts = Array.from(items).map((item) => {
+    const titleEl = item.querySelector('title');
+    const descriptionEl = item.querySelector('description');
+    const linkEl = item.querySelector('link');
+    const guidEl = item.querySelector('guid');
 
-      const title = titleElem.textContent;
-      const guid = guidElem.textContent;
-      const link = linkElem.textContent;
-      const description = descriptionElem.textContent;
-      return {
-        title, guid, link, description,
-      };
-    });
+    const title = titleEl.textContent;
+    const description = descriptionEl.textContent;
+    const link = linkEl.textContent;
+    const guid = guidEl.textContent;
+
+    return {
+      title, description, link, guid,
+    };
+  });
+
+  return posts;
 };
-const takeFeeds = (domTree) => {
-  const titleElem = domTree.querySelector('channel > title');
-  const descriptionElem = domTree.querySelector('channel > description');
+const takeFeeds = (dom) => {
+  const titleElem = dom.querySelector('channel > title');
+  const descriptionElem = dom.querySelector('channel > description');
   if (!titleElem || !descriptionElem) {
     return null;
   }
@@ -29,11 +31,17 @@ const takeFeeds = (domTree) => {
   const description = descriptionElem.textContent;
   return { title, description };
 };
+export const parseDescription = (desc) => {
+  const parser = new DOMParser();
+  const htmlDoc = parser.parseFromString(desc, 'text/html');
+  const text = htmlDoc.body.textContent;
+  return text;
+};
 
 export default (domTree) => {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(domTree, 'text/xml');
   const posts = takePosts(xmlDoc);
   const feeds = takeFeeds(xmlDoc);
-  return { posts, feeds };
+  return { feeds, posts };
 };

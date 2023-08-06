@@ -1,7 +1,7 @@
 export default {
   translation: {
     main_title: 'RSS агрегатор',
-    example: 'Пример: https://ru.hexlet.io/lessons.rss',
+    example: 'Пример: https://buzzfeed.com/world.xml',
     slogan: 'Начните читать RSS сегодня! Это легко, это красиво.',
     rssForm: {
       rssLabel: 'Ссылка RSS',

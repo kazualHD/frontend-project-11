@@ -103,7 +103,7 @@ export default () => {
       .then((response) => response.data.contents)
       .then((contents) => {
         const parser = parse(contents);
-        const { posts, feeds } = parser;
+        const { feeds, posts } = parser;
         if (!feeds || !posts) {
           throw new Error('Parser Error');
         }
@@ -117,14 +117,13 @@ export default () => {
         watcher.proccesState = 'loaded';
         watcher.rssForm.proccesState = 'filling';
         watcher.uiState.feedback = 'feedback.success';
-        return feeds.id;
       })
       .catch((e) => {
         switch (e.name) {
           case 'ValidationError': {
             const [customError] = e.errors;
             watcher.rssForm.proccesState = 'invalidated';
-            watcher.uiState.feedback = customError; // PROBLEM !!!
+            watcher.uiState.feedback = customError;
             break;
           }
           case 'AxiosError':

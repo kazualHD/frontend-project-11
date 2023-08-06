@@ -1,4 +1,5 @@
 import onChange from 'on-change';
+import { parseDescription } from './parser.js';
 
 export const renderElementsText = (elements, i18nextNewInstance) => {
   const {
@@ -113,10 +114,9 @@ const renderPostsElems = (elements, values, i18nextNewInstance, watcher) => {
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     li.addEventListener('click', (event) => {
       const { target } = event;
-      const { id } = target;
+      const { id } = target.dataset;
       watcher.uiState.readPostsId.push(id);
     });
-
     const a = document.createElement('a');
     a.classList.add('fw-bold');
     a.setAttribute('href', post.link);
@@ -140,11 +140,13 @@ const renderPostsElems = (elements, values, i18nextNewInstance, watcher) => {
       const modalTitle = modal.querySelector('.modal-title');
       const modalBody = modal.querySelector('.modal-body');
       const modalFullArticleBtn = document.querySelector('.modal-footer a.full-article');
-      modalFullArticleBtn.setAttribute('href', post.link);
       const modalCloseBtn = document.querySelector('.modal-footer button');
 
       modalTitle.textContent = post.title;
-      modalBody.textContent = post.description;
+      const { description } = post;
+      modalBody.textContent = parseDescription(description);
+      console.log(post);
+      modalFullArticleBtn.setAttribute('href', post.link);
       modalFullArticleBtn.textContent = i18nextNewInstance.t('modal_position.article');
       modalCloseBtn.textContent = i18nextNewInstance.t('modal_position.close');
     });
