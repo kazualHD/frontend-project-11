@@ -140,6 +140,7 @@ const renderPostsElems = (elements, values, i18nextNewInstance, watcher) => {
       const modalTitle = modal.querySelector('.modal-title');
       const modalBody = modal.querySelector('.modal-body');
       const modalFullArticleBtn = document.querySelector('.modal-footer a.full-article');
+      modalFullArticleBtn.setAttribute('href', post.link);
       const modalCloseBtn = document.querySelector('.modal-footer button');
 
       modalTitle.textContent = post.title;
