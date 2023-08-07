@@ -3,6 +3,7 @@ import axios from 'axios';
 import i18next from 'i18next';
 import parse from './parser.js';
 import watch, { renderElementsText } from './view.js';
+import updater from './update.js';
 import resources from '../locales/index.js';
 
 const createId = (() => {
@@ -90,6 +91,7 @@ export default () => {
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
+    let proxy;
     watcher.rssForm.proccesState = 'validating';
     const schema = getSchema(watcher.validLinks);
     schema.validate(watcher.rssForm.link)
@@ -97,7 +99,7 @@ export default () => {
         watcher.rssForm.proccesState = 'validated';
         watcher.proccesState = 'loading';
         watcher.validLinks.push(watcher.rssForm.link);
-        const proxy = constructProxyURL(proxyServiceUrl, url);
+        proxy = constructProxyURL(proxyServiceUrl, url);
         return axios.get(proxy);
       })
       .then((response) => response.data.contents)
@@ -117,6 +119,11 @@ export default () => {
         watcher.proccesState = 'loaded';
         watcher.rssForm.proccesState = 'filling';
         watcher.uiState.feedback = 'feedback.success';
+        return posts.id;
+      })
+      .then((id) => {
+        watcher.proccesState = 'spying';
+        return setTimeout(() => updater(proxy, watcher, id, createId), 5000);
       })
       .catch((e) => {
         switch (e.name) {
