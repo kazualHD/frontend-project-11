@@ -40,5 +40,5 @@ make build
 make develop
 
 ### Demo: 
-[![Versel](https://frontend-project-11-l40ifr4gb-kazualhd.vercel.app/)
+[Versel](https://frontend-project-11-l40ifr4gb-kazualhd.vercel.app/)
 
