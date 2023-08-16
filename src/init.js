@@ -2,7 +2,8 @@ import * as yup from 'yup';
 import axios from 'axios';
 import i18next from 'i18next';
 import parse from './parser.js';
-import watch, { renderElementsText } from './view.js';
+import watch from './view.js';
+import renderElementsText from './components/renderElText.js';
 import updater from './update.js';
 import resources from '../locales/index.js';
 
@@ -135,12 +136,14 @@ export default () => {
           }
           case 'AxiosError':
             if (e.message === 'Network Error') {
+              watcher.rssForm.proccesState = 'invalidated';
               watcher.uiState.feedback = 'feedback.errors.network';
             }
             break;
 
           case 'Error':
             if (e.message === 'Parser Error') {
+              watcher.rssForm.proccesState = 'invalidated';
               watcher.uiState.feedback = 'feedback.errors.parser';
             }
             break;
