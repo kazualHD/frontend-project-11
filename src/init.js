@@ -135,14 +135,12 @@ export default () => {
           }
           case 'AxiosError':
             if (e.message === 'Network Error') {
-              watcher.proccesState = 'network_error';
               watcher.uiState.feedback = 'feedback.errors.network';
             }
             break;
 
           case 'Error':
             if (e.message === 'Parser Error') {
-              watcher.proccesState = 'parser_error';
               watcher.uiState.feedback = 'feedback.errors.parser';
             }
             break;
