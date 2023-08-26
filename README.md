@@ -3,39 +3,36 @@
 ### Code Climate: 
 [![Maintainability](https://api.codeclimate.com/v1/badges/1feedbf105edbf36f1ca/maintainability)](https://codeclimate.com/github/kazualHD/frontend-project-11/maintainability)
 
-# RSS Агрегатор
+# RSS aggregator
 
-Этот проект представляет собой простой RSS агрегатор, который позволяет вам подписываться на различные RSS ленты и получать обновления в одном месте.
+This project is a simple RSS aggregator that allows you to subscribe to different RSS feeds and receive updates in one place.
+## Description
 
-## Описание
+RSS (Really Simple Syndication) - is a format for automated delivery of information such as news, articles and blog updates. This project allows you to subscribe to various RSS feeds and view news and updates in a user-friendly interface.
 
-RSS (Really Simple Syndication) - это формат для автоматизированной доставки информации, такой как новости, статьи и обновления блогов. Этот проект позволяет вам подписываться на различные RSS ленты и просматривать новости и обновления в удобном интерфейсе.
+## Possibilities
 
-## Возможности
+- Users can add tapes.
+- The system automatically updates the feeds and provides a summary of the latest news.
+- a simple and intuitive interface for viewing news.
 
-- Пользователи могут добавлять ленты.
-- Система автоматически обновляет ленты и предоставляет сводку последних новостей.
-- Простой и интуитивно понятный интерфейс для просмотра новостей.
+## Installing
 
-## Установка
-
-1. Склонируйте репозиторий:
+1. Decline the repository:
 
 git clone git@github.com:kazualHD/frontend-project-11.git
 
-2. Перейдите в репозиторий:
+2. Go to the repository:
 
-cd frontend-project-11
+frontend-project-11
 
-3. Загрузите все зависмости: 
+3. Load all the jealousies: 
 
 make install
 
-4. Запустите сборку:
+4. Start the assembly:
 
 make build
-
-5. Можете разворачивать проект на локальном сервере
 
 make develop
 

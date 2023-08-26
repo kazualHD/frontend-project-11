@@ -1,27 +1,13 @@
 import * as yup from 'yup';
 import axios from 'axios';
 import i18next from 'i18next';
+import _ from 'lodash';
+import constructProxyURL from './components/buildProxy.js';
 import parse from './parser.js';
 import watch from './view.js';
 import renderElementsText from './components/renderElText.js';
 import updater from './update.js';
-import resources from '../locales/index.js';
-
-const createId = (() => {
-  let startId = 0;
-
-  return () => {
-    startId += 1;
-    return startId;
-  };
-})();
-
-const constructProxyURL = (proxy, link) => {
-  const url = new URL('/get', proxy);
-  url.searchParams.append('disableCache', true);
-  url.searchParams.append('url', link);
-  return url;
-};
+import resources from './locales/index.js';
 
 export default () => {
   const defaultLang = 'ru';
@@ -84,6 +70,7 @@ export default () => {
   } = elements;
 
   const watcher = watch(elements, state, i18nextNewInstance);
+  updater(watcher);
 
   input.addEventListener('change', (event) => {
     const { target } = event;
@@ -110,21 +97,16 @@ export default () => {
         if (!feeds || !posts) {
           throw new Error('Parser Error');
         }
-        feeds.id = createId();
+        feeds.id = _.uniqueId();
         posts.forEach((post) => {
-          post.feedId = feeds.id; // eslint-disable-line no-param-reassign
-          post.id = createId(); // eslint-disable-line no-param-reassign
+          post.feedId = feeds.id;
+          post.id = _.uniqueId();
         });
         watcher.data.feeds.push(feeds);
         watcher.data.posts.push(...posts);
         watcher.proccesState = 'loaded';
         watcher.rssForm.proccesState = 'filling';
         watcher.uiState.feedback = 'feedback.success';
-        return posts.id;
-      })
-      .then((id) => {
-        watcher.proccesState = 'spying';
-        return setTimeout(() => updater(proxy, watcher, id, createId), 5000);
       })
       .catch((e) => {
         switch (e.name) {

@@ -4,7 +4,7 @@ import rssFormStateProcces from './components/rssFormStateProcces.js';
 import generate from './components/generateFeedback.js';
 import renderPostsElems from './components/renderPostsElems.js';
 import renderFeedsElems from './components/renderFeedsElems.js';
-import setUninId from './components/setUniqId.js';
+import setUniqId from './components/setUniqId.js';
 
 export default (elements, state, i18nextNewInstance) => {
   const watcher = onChange(state, (path, value) => {
@@ -26,7 +26,7 @@ export default (elements, state, i18nextNewInstance) => {
       }
       case 'data.posts': {
         renderPostsElems(elements, value, i18nextNewInstance, watcher);
-        setUninId(watcher.uiState.readPostsId);
+        setUniqId(watcher.uiState.readPostsId);
         break;
       }
       case 'data.feeds': {
@@ -34,7 +34,7 @@ export default (elements, state, i18nextNewInstance) => {
         break;
       }
       case 'uiState.readPostsId':
-        setUninId(value);
+        setUniqId(value);
         break;
       default: {
         throw new Error('Unexpected Format');

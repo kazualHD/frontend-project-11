@@ -1,32 +1,47 @@
+import _ from 'lodash';
 import axios from 'axios';
 import parse from './parser.js';
+import constructProxyURL from './components/buildProxy.js';
 
-const postUpdater = (link, watcher, id, createId) => axios.get(link)
-  .then((resp) => resp.data.contents)
-  .then((cont) => {
-    const { posts } = parse(cont);
-    if (!posts) {
-      throw new Error('Parse errror');
-    }
-    return posts;
-  })
-  .then((posts) => {
-    const uploadedPosts = watcher.data.posts.filter((post) => post.feedId === id);
-    const guids = uploadedPosts.map((post) => post.guid);
-    const coll = new Set(guids);
-    const newPosts = posts.filter(({ guid }) => !coll.has(guid));
+const update = (watcher) => {
+  const proxyServiceUrl = 'https://allorigins.hexlet.app';
+  const { feeds } = watcher.data;
+  const promises = feeds.map((feed) => {
+    const { url } = feed;
+    const proxy = constructProxyURL(proxyServiceUrl, url);
+    return axios.get(proxy);
+  });
 
-    if (newPosts.length === 0) {
-      return;
-    }
-    newPosts.forEach((post) => {
-      post.feedId = id; // eslint-disable-line no-param-reassign
-      post.id = createId(); // eslint-disable-line no-param-reassign
+  Promise.all(promises)
+    .then((responses) => {
+      responses.forEach((resp, index) => {
+        const { posts } = parse(resp.data.contents);
+
+        if (!posts) {
+          throw new Error('Parser Error');
+        }
+
+        const feedId = watcher.data.feeds[index].id;
+
+        posts.forEach((post) => {
+          post.feedId = feedId;
+          post.id = _.uniqueId();
+        });
+
+        const existingPostIds = watcher.data.posts.map((post) => post.id);
+        const newPosts = posts.filter((post) => !existingPostIds.includes(post.id));
+
+        watcher.data.posts.push(...newPosts);
+        watcher.uiState.feedback = 'feedback.success';
+      });
+    })
+    .catch((e) => {
+      console.error(`Error updating feed: ${e}`);
+      watcher.uiState.feedback = 'feedback.errors.update';
+    })
+    .finally(() => {
+      setTimeout(() => update(watcher), 5000);
     });
-    watcher.data.posts.push(...newPosts);
-    return newPosts; // eslint-disable-line consistent-return
-  })
-  .catch((e) => console.error(e.message))
-  .finally(() => setTimeout(() => postUpdater(link, watcher, id, createId), 5000));
+};
 
-export default postUpdater;
+export default update;

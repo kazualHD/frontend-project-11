@@ -39,9 +39,14 @@ export const parseDescription = (desc) => {
 };
 
 export default (domTree) => {
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(domTree, 'text/xml');
-  const posts = takePosts(xmlDoc);
-  const feeds = takeFeeds(xmlDoc);
-  return { feeds, posts };
+  try {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(domTree, 'text/xml');
+    const posts = takePosts(xmlDoc);
+    const feeds = takeFeeds(xmlDoc);
+    return { feeds, posts };
+  } catch (error) {
+    console.error('Parsing error:', error);
+    return { feeds: [], posts: [] };
+  }
 };
