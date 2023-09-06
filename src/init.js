@@ -61,7 +61,6 @@ export default () => {
     feeds: document.querySelector('.feeds'),
     posts: document.querySelector('.posts'),
   };
-
   renderElementsText(elements, i18nextNewInstance); // rendering text for elements with i18next
 
   const {
@@ -70,7 +69,7 @@ export default () => {
   } = elements;
 
   const watcher = watch(elements, state, i18nextNewInstance);
-  updater(watcher);
+  updater(watcher, proxyServiceUrl);
 
   input.addEventListener('change', (event) => {
     const { target } = event;

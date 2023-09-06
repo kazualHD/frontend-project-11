@@ -47,6 +47,6 @@ export default (domTree) => {
     return { feeds, posts };
   } catch (error) {
     console.error('Parsing error:', error);
-    return { feeds: [], posts: [] };
+    throw new Error(`Parser error ${error}`);
   }
 };

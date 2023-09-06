@@ -3,12 +3,11 @@ import axios from 'axios';
 import parse from './parser.js';
 import constructProxyURL from './components/buildProxy.js';
 
-const update = (watcher) => {
-  const proxyServiceUrl = 'https://allorigins.hexlet.app';
+const update = (watcher, proxySerive) => {
   const { feeds } = watcher.data;
   const promises = feeds.map((feed) => {
     const { url } = feed;
-    const proxy = constructProxyURL(proxyServiceUrl, url);
+    const proxy = constructProxyURL(proxySerive, url);
     return axios.get(proxy);
   });
 
@@ -40,7 +39,7 @@ const update = (watcher) => {
       watcher.uiState.feedback = 'feedback.errors.update';
     })
     .finally(() => {
-      setTimeout(() => update(watcher), 5000);
+      setTimeout(() => update(watcher, proxySerive), 5000);
     });
 };
 

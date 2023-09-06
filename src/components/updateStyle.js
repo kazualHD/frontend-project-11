@@ -1,4 +1,4 @@
-const setUninId = (readPostsId) => {
+const updateReadPostsStyles = (readPostsId) => {
   const linkNodes = document.querySelectorAll('.posts ul .list-group-item a');
   const readPosts = new Set(readPostsId);
   linkNodes.forEach((a) => {
@@ -8,4 +8,4 @@ const setUninId = (readPostsId) => {
     }
   });
 };
-export default setUninId;
+export default updateReadPostsStyles;

@@ -2,6 +2,17 @@ import { parseDescription } from '../parser.js';
 
 const renderPostsElems = (elements, values, i18nextNewInstance, watcher) => {
   const { posts } = elements;
+  const updateModalContent = (post, modal) => {
+    const modalTitle = modal.querySelector('.modal-title');
+    const modalBody = modal.querySelector('.modal-body');
+    const modalFullArticleBtn = modal.querySelector('.modal-footer a.full-article');
+    const modalCloseBtn = modal.querySelector('.modal-footer button');
+    modalTitle.textContent = post.title;
+    modalBody.textContent = parseDescription(post.description);
+    modalFullArticleBtn.setAttribute('href', post.link);
+    modalFullArticleBtn.textContent = i18nextNewInstance.t('modal_position.article');
+    modalCloseBtn.textContent = i18nextNewInstance.t('modal_position.close');
+  };
 
   const div = document.createElement('div');
   div.classList.add('card', 'border-0');
@@ -22,26 +33,14 @@ const renderPostsElems = (elements, values, i18nextNewInstance, watcher) => {
     if (target.closest('li.list-group-item')) {
       const { id } = target.dataset;
       watcher.uiState.readPostsId.push(id);
-    }
 
-    if (target.closest('.btn')) {
-      const { id } = target.dataset;
-      const modal = document.querySelector(target.dataset.bsTarget);
-      const modalTitle = modal.querySelector('.modal-title');
-      const modalBody = modal.querySelector('.modal-body');
-      const modalFullArticleBtn = modal.querySelector('.modal-footer a.full-article');
-      const modalCloseBtn = modal.querySelector('.modal-footer button');
-
-      const post = values.find((p) => p.id === id);
-
-      modalTitle.textContent = post.title;
-      modalBody.textContent = parseDescription(post.description);
-      modalFullArticleBtn.setAttribute('href', post.link);
-      modalFullArticleBtn.textContent = i18nextNewInstance.t('modal_position.article');
-      modalCloseBtn.textContent = i18nextNewInstance.t('modal_position.close');
+      if (target.closest('.btn')) {
+        const modal = document.querySelector(target.dataset.bsTarget);
+        const post = values.find((p) => p.id === id);
+        updateModalContent(post, modal);
+      }
     }
   });
-
   values.forEach((post) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
